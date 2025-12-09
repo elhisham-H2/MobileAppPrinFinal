@@ -22,18 +22,21 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val viewModel: CityViewModel = hiltViewModel()
 
-            NavHost(navController = navController, startDestination = "list") {
-                composable("list") {
-                    val list by viewModel.cityList.collectAsState()
-                    CityListScreen(cityList = list) { id ->
-                        viewModel.selectCity(id)
-                        navController.navigate("detail")
-                    }
-                }
+            sheridan.elshirai.citydata.ui.theme.CityDataTheme(darkTheme = true) {
 
-                composable("detail") {
-                    val city by viewModel.selectedCity.collectAsState()
-                    CityDetailScreen(city = city)
+                NavHost(navController = navController, startDestination = "list") {
+                    composable("list") {
+                        val list by viewModel.cityList.collectAsState()
+                        CityListScreen(cityList = list) { id ->
+                            viewModel.selectCity(id)
+                            navController.navigate("detail")
+                        }
+                    }
+
+                    composable("detail") {
+                        val city by viewModel.selectedCity.collectAsState()
+                        CityDetailScreen(city = city, navController = navController)
+                    }
                 }
             }
         }

@@ -5,12 +5,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home 
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import sheridan.elshirai.citydata.domain.City
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,14 +46,12 @@ fun CityRow(city: City, onClick: (String) -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = Icons.Default.Home,
+                imageVector = Icons.Default.LocationOn,
                 contentDescription = null,
                 modifier = Modifier.size(48.dp),
                 tint = MaterialTheme.colorScheme.primary
             )
-
             Spacer(modifier = Modifier.width(16.dp))
-
             Column {
                 Text(text = city.name, style = MaterialTheme.typography.titleLarge)
                 Text(text = city.country, style = MaterialTheme.typography.bodyMedium)
@@ -62,15 +62,30 @@ fun CityRow(city: City, onClick: (String) -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CityDetailScreen(city: City?) {
+fun CityDetailScreen(
+    city: City?,
+    navController: NavController
+) {
     Scaffold(
-        topBar = { CenterAlignedTopAppBar(title = { Text(city?.name ?: "Details") }) }
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text(city?.name ?: "Details") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                }
+            )
+        }
     ) { padding ->
         Column(modifier = Modifier.padding(padding).padding(16.dp)) {
             if (city != null) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = Icons.Default.Home,
+                        imageVector = Icons.Default.LocationOn,
                         contentDescription = null,
                         modifier = Modifier.size(64.dp),
                         tint = MaterialTheme.colorScheme.primary
