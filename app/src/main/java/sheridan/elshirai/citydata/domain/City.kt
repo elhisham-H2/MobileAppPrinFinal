@@ -7,7 +7,7 @@ data class CityResponse(
 data class City(
     val cityId: String,
     val name: String,
-    val population: Int,
+    val population: Long,
     val isCapital: Boolean,
     val area: Double,
     val country: String
