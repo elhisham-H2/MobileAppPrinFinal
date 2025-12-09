@@ -1,3 +1,7 @@
+// Final Kotlin Practical
+// Mobile Application Principles
+// Hisham (H²) El-Shiraida - 991750966
+
 package sheridan.elshirai.citydata
 
 import android.os.Bundle
