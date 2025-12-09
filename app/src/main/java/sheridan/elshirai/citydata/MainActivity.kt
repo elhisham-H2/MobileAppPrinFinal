@@ -3,45 +3,39 @@ package sheridan.elshirai.citydata
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import sheridan.elshirai.citydata.ui.theme.CityDataTheme
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import sheridan.elshirai.citydata.ui.theme.CityListScreen
+import sheridan.elshirai.citydata.ui.theme.CityViewModel
+import sheridan.elshirai.citydata.ui.theme.CityDetailScreen
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
-            CityDataTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+            val navController = rememberNavController()
+            val viewModel: CityViewModel = hiltViewModel()
+
+            NavHost(navController = navController, startDestination = "list") {
+                composable("list") {
+                    val list by viewModel.cityList.collectAsState()
+                    CityListScreen(cityList = list) { id ->
+                        viewModel.selectCity(id)
+                        navController.navigate("detail")
+                    }
+                }
+
+                composable("detail") {
+                    val city by viewModel.selectedCity.collectAsState()
+                    CityDetailScreen(city = city)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CityDataTheme {
-        Greeting("Android")
     }
 }
